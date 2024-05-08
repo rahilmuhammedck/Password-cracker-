@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MD5 Password Cracker </title>
+    <title>MD5 Password Converter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,39 +60,28 @@
 </head>
 <body>
     <header>
-        <h1>MD5 Password Cracker </h1>
+        <h1>MD5 Password Converter</h1>
     </header>
     <div class="container">
-        <form id="passwordForm">
-            <label for="passwordInput">Enter Password:</label>
-            <input type="text" id="passwordInput" name="passwordInput" placeholder="Plaintext Password">
-            <button type="submit">Convert to MD5</button>
-        </form>
-        <div class="result" id="resultArea" style="display: none;">
+        <div>
+            <label for="plaintextInput">Enter Plain Text Password:</label>
+            <input type="text" id="plaintextInput">
+            <button onclick="convertToMD5()">Convert to MD5</button>
+        </div>
+        <div class="result" id="md5ResultArea" style="display: none;">
             <h2>MD5 Hashed Password:</h2>
-            <p id="passwordResult"></p>
+            <p id="md5Password"></p>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
-        function convertToMD5(password) {
-            var md5 = new MessageDigest("MD5");
-            var passwordBytes = new TextEncoder().encode(password);
-            md5.update(passwordBytes);
-            var hashBytes = md5.digest();
-            var hashHex = Array.from(hashBytes, function(byte) {
-                return ("0" + (byte & 0xFF).toString(16)).slice(-2);
-            }).join("");
-            return hashHex;
+        function convertToMD5() {
+            var plaintextPassword = document.getElementById("plaintextInput").value;
+            var hashedPassword = CryptoJS.MD5(plaintextPassword).toString();
+            document.getElementById("md5Password").innerText = hashedPassword;
+            document.getElementById("md5ResultArea").style.display = "block";
         }
-
-        document.getElementById("passwordForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var plaintextPassword = document.getElementById("passwordInput").value;
-            var hashedPassword = convertToMD5(plaintextPassword);
-            document.getElementById("passwordResult").innerText = hashedPassword;
-            document.getElementById("resultArea").style.display = "block";
-        });
     </script>
 </body>
 </html>
